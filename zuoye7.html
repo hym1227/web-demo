@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		body{
+			background: #eee;
+		}
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		ul,li{
+			list-style: none;
+		}
+		#img1{
+			margin-left: 200px;
+		}
+		.all{
+			width: 1400px;
+			height: 470px;
+			border: 2px solid black;
+			border-top: none;
+			border-bottom: none;
+			margin: 100px auto;
+			position: relative;
+			overflow: hidden;
+			background: white;
+		}
+		.box{
+			width: 1200px;
+			height: 383px;
+			border: 1px solid white;
+			margin: 15px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		#warn{
+			width: 1400px;
+			height: 20px;
+			background: #ddd;
+		}
+		.slider{
+			width: 8400px;
+			position: absolute;
+			left: -1200px;
+		}
+		.slide{
+			width: 1200px;
+			overflow: hidden;
+			float: left;
+		}
+		.box>span{
+			display: block;
+			width: 30px;
+			height: 50px;
+			text-align: center;
+			cursor:pointer ;
+			color: ;
+			top: 195px;
+			line-height: 50px;
+			background: rgb(255,0,0);
+			font-size: 30px;
+			position: absolute;
+			opacity: 0;
+		}
+		#left{
+			left: 30px;
+		}
+		#right{
+			right: 30px;
+		}
+		.nav{
+		position: absolute;
+		left: 500px;
+		bottom: 20px;
+		}
+		.nav>li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: #ccc;
+			cursor: pointer;
+			margin: 0 10px;
+			border-radius: 50%;
+			text-align: center;
+			font-size: 0.8em;
+		}
+		#active{
+			background:red;
+			color: white;
+		}
+		#warning{
+			width: 940px;
+			height: 13px;
+			float: right;
+			margin-right: 220px;
+			font-size: 0.55em;
+			color: red;
+			overflow: hidden;
+			margin-top: 3px;
+		}
+		
+	</style>
+	<script src="animate.js"></script>
+</head>
+<body>
+	<div class="all">
+		<div id="warn"><img src="image/a15.png" id="img1"><div id="warning"><span style="margin-left:650px;overflow:hidden; " id="Warn">[温馨提示]最近有不少不法分子在网上骗人，请大家注意!!!</span></div></div>
+		<div class="box" id="box">
+		<div class="slider" id="slider">
+			<div class="slide"><img src="image/b5.png" alt=""></div>
+			<div class="slide"><img src="image/b1.png" alt=""></div>
+			<div class="slide"><img src="image/b2.png" alt=""></div>
+			<div class="slide"><img src="image/b3.png" alt=""></div>
+			<div class="slide"><img src="image/b4.png" alt=""></div>
+			<div class="slide"><img src="image/b5.png" alt=""></div>
+			<div class="slide"><img src="image/b1.png" alt=""></div>			
+		</div>
+		<span id="left">< </span>
+		<span id="right">></span>
+		<ul class="nav" id="nav">
+			<li id="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>			
+		</ul>
+	</div>
+	</div>
+</body>
+<script>
+	var box=document.getElementById("box");
+	var navArr=document.getElementById("nav").children;
+	var slider=document.getElementById("slider");
+	var left=document.getElementById("left");
+	var right=document.getElementById("right");
+	var Warn=document.getElementById("Warn");
+	var index=1;
+	var timer;
+	var isMoving=false;
+	var flag=65;
+	//文字的滚动 
+	function speek(){
+		Warn.style.color="red";
+		if(flag<-30){
+			Warn.style.marginLeft="900px";
+			Warn.style.color="#ddd";
+			flag=90;
+		}
+		flag--;
+	animate(Warn,{marginLeft:10*flag});
+
+ 	}
+	setInterval(speek,200);
+
+	function next(){
+		index++;
+		navChange();
+		animate(slider,{left:-1200*index},function(){
+			if(index===6){
+				slider.style.left="-1200px";
+				index=1;
+			}
+		});
+	}
+	function prev(){
+		index--;
+		navChange();
+		animate(slider,{left:-1200*index},function(){
+			if(index===0){
+				slider.style.left="-6000px";
+				index=5;
+			}
+		});
+	}
+	var timer=setInterval(next,3000);
+		//鼠标划上的时间
+	slider.onmouseover=function(){
+		animate(left,{opacity:50});
+		animate(right,{opacity:50});
+		clearInterval(timer);
+	}
+	//鼠标离开事件
+	slider.onmouseout=function(){
+		animate(left,{opacity:0});
+		animate(right,{opacity:0});
+		timer=setInterval(next,3000);
+	}
+	right.onclick=next;
+	left.onclick=prev;
+
+	for(var i=0;i<navArr.length;i++){
+		navArr[i].idx=i;
+		navArr[i].onclick=function(){
+			index=this.idx+1;
+			navChange();
+			// clearInterval(timer);
+			animate(slider,{left:-1200*index})
+		}
+	}
+	//小按钮背景色
+	function navChange(){	
+		console.log(index);
+		for(var i=0;i<navArr.length;i++){
+			navArr[i].setAttribute('id',' ');
+		}	
+		if(index===6){
+			navArr[0].setAttribute("id",'active');
+		}else if(index===0){
+			navArr[4].setAttribute('id','active');
+		}else{
+			navArr[index-1].setAttribute('id','active');
+		}
+	}
+		
+</script>
+</html>
+
